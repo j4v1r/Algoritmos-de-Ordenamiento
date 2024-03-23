@@ -1,29 +1,30 @@
 /*
-Burbuja.c
+Insercion.c
 V 1.0 Marzo 2024
 Grupo: 2CM2
 Autores: Colunga Aguilar Javier Alejandro
 		
 Programa que lee una n cantidad de números y los escribe en un arreglo dinámico ptr,
-después ejecuta el algoritmo de ordenamiento de Burbuja O(n^2) que ordena estos 
+después ejecuta el algoritmo de ordenamiento de Inserción O(n^2) que ordena estos 
 números de menor a mayor. Finalmente, imprime estos números ordenados en un archivo
 de texto y muestra el tiempo de ejecución del ordenamiento.
 
 Compilación:
 En el script.bat: 
-gcc Burbuja.c -o burbuja
-burbuja n<archivo.txt> nombrearchivosalida.txt					
+gcc Insercion.c -o insercion
+insercion n<archivo.txt> nombrearchivosalida.txt					
+
 */
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-#include <stdbool.h>
 
 #define TRUE 1
 #define FALSE 0
 
 
-void burbuja(int *arr, int n);
+void insercion(int *arr, int n);
 
 int main(int nums, char* argv[]){
 	
@@ -70,7 +71,7 @@ int main(int nums, char* argv[]){
 		t_inicio = clock();
 	
 		//Llamar al algoritmo
-		burbuja(ptr,n);
+		insercion(ptr,n);
 	
 		//Termina mediciÃ³n del tiempo	
 		t_final = clock();
@@ -78,8 +79,8 @@ int main(int nums, char* argv[]){
 		//CÃ¡lculo del tiempo y enviar mensaje a salida estandar con la mediciÃ³n  
     	t_intervalo = (double)(t_final - t_inicio) / CLOCKS_PER_SEC;
    
-	
-		//Mostrar el tiempo medido 
+   
+   		//Mostrar el tiempo medido 
 		printf("\n\nTiempo medido: %.8f segundos.", t_intervalo);
 	
 		//Enviar a la salida estandar el arreglo final
@@ -95,54 +96,33 @@ int main(int nums, char* argv[]){
 
 
 /*
-void burbuja(int *arr,int n)
+void insercion(int *arr,int n)
 
 Recibe: int *arr, dirección del arreglo ptr de memoria dinámica
 		int n, cantidad de números a ordenar 
 		
 Devuelve: void (No retorna valor explicito)
 
-Observaciones: Funciona tal que compara dos números adyacentes del arreglo ptr, 
-si el primero es mayor que el segundo estos intercambian posición entre ellos, 
-así hasta llegar al último par de números. 
-
-Este ciclo se repite tantas veces como números a ordenar, sin embargo, apartir 
-del segundo ciclo deja de compararse un elemento final del arreglo más, de tal 
-manera que los números finales que dejan de compararse se determinan por c-1, 
-siendo c el ciclo en el que se encuentra el programa.
-
-Finalmente, para evitar hacer ciclos de comparación innecesarios cuando el 
-arreglo ya se encuentra ordenado, se agrega una variable booleana nombrada 
-"cambios" la cual asegura que durante el ciclo haya habido al menos un cambio 
-de posición entre elementos y por lo tanto aún no está ordenado, de lo 
-contrario finaliza el bucle y el programa, pues el arreglo ya está ordenado.
+Observaciones: Inserción se ocupa de comparar un número del arreglo, comenzando desde
+la izquierda (la posción [0]), con los que se encuentran a la izquierda de este hasta 
+encontrar un número menor o llegar al final del arreglo, se inserta en la siguiente 
+posición del número menor a este o al incio del arreglo, desplazando a la derecha 
+todos los números mayores comparados anteriormente. Este ciclo continua hasta que el 
+último número del arreglo haya sido comparado con todos los demás. 
 */
-void burbuja(int *arr, int n){
+
+void insercion(int *arr, int n){
 	 
-	int i=0, j, aux;
-	//Variable que determina si hubo cambios en el arreglo
-	bool cambios = true;
+	int i, j, aux;
 	
-	/*Bucle while que asegura la repetición de ciclos siempre que todos los números 
-	adyacentes hayan sido comparados y que haya habido mínimo un cambio*/
-	while(i<=n-2 && cambios!=false){
-		//La variable "cambios" con valor "false" indica que no ha habido cambios
-		cambios=false;
-		for(j=0; j<=(n-2)-i; j++){
-			/*Si el primero es mayor que el segundo entonces:*/
-			if(arr[j]>arr[j+1]){
-				//La variable "aux" toma el valor del segundo número
-				aux=arr[j];
-				//La primera posición toma el valor del número en la segunda
-				arr[j]=arr[j+1];
-				//La segunda posición toma el valor del número en "aux"
-				arr[j+1]=aux;
-				//Ha habido un cambio, por lo que cambios cambia a "true" 
-				cambios=true;
-			}
+	for(i=0;i<=n-1;i++ ){
+		j=i;
+		aux=arr[i];
+		while(j>0 && (aux<arr[j-1])){
+			arr[j]=arr[j-1];
+			j--;
 		}
-		//El aumento de la variable "i" indica la finalización de un ciclo
-		i+=1;
+		arr[j]=aux;
 	}
 		
 	return;
